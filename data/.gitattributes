@@ -1,0 +1,2 @@
+# the .txt files in this directory use LF as downloaded
+*.txt -text
