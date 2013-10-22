@@ -46,10 +46,10 @@ def benchmark_test(test_data)
     if String.method_defined? :localize
       puts
       puts "Using twitter_cldr gem (a single time)"
-      x.report("NFD:")   { test_data.text.localize.normalize(:using => :NFD)}
-      x.report("NFKD:") { test_data.text.localize.normalize(:using => :NFKD)}
-      x.report("NFC:")  { test_data.text.localize.normalize(:using => :NFC)}
-      x.report("NFKC:") { test_data.text.localize.normalize(:using => :NFKC)}
+      x.report("NFD:")   { TwitterCldr::Normalization::NFD.normalize(test_data.text) }
+      x.report("NFKD:") { TwitterCldr::Normalization::NFKD.normalize(test_data.text) }
+      x.report("NFC:")  { TwitterCldr::Normalization::NFC.normalize(test_data.text) }
+      x.report("NFKC:") { TwitterCldr::Normalization::NFKC.normalize(test_data.text) }
     end
   end
   puts
