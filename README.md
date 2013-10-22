@@ -9,7 +9,7 @@ The Talk
 Please see the
 [Internationalization & Unicode Conference 37](http://www.unicodeconference.org/)
 talk on
-[Implementing Normalization in Pure Ruby - the Fast and Easy Way](http://www.unicodeconference.org/program-d.htm#S4-3).
+[Implementing Normalization in Pure Ruby - the Fast and Easy Way](http://www.sw.it.aoyama.ac.jp/2013/pub/RubyNorm/).
 
 Directories and Files
 ---------------------
