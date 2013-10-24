@@ -33,7 +33,7 @@ def benchmark_test(test_data)
   puts "________________ #{test_data.name} (#{test_data.text.length} characters, #{test_data.text.bytes.to_a.length} bytes) ________________"
   Benchmark.bm(6) do |x|
     if String.method_defined? :encode
-      puts "Fast Normalization using gsub and hash (100 times)"
+      puts "Fast normalization using eprun (100 times)"
       x.report("NFD:")   { 100.times { test_data.text.normalize(:nfd) } }
       x.report("NFKD:") { 100.times { test_data.text.normalize(:nfkd) } }
       x.report("NFC:")   { 100.times { test_data.text.normalize(:nfc) } }
