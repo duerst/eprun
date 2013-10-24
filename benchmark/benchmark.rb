@@ -24,6 +24,11 @@ begin
 rescue LoadError
 end
 
+begin
+  require 'active_support/multibyte/chars'
+rescue LoadError
+end
+
 def benchmark_test(test_data)
   puts "_____________________________ #{test_data.name} ____________________________________"
   Benchmark.bm(6) do |x|
@@ -50,6 +55,14 @@ def benchmark_test(test_data)
       x.report("NFKD:") { TwitterCldr::Normalization::NFKD.normalize(test_data.text) }
       x.report("NFC:")  { TwitterCldr::Normalization::NFC.normalize(test_data.text) }
       x.report("NFKC:") { TwitterCldr::Normalization::NFKC.normalize(test_data.text) }
+    end
+    if self.class.const_defined? :"ActiveSupport"
+      puts
+      puts "Using ActiveSupport::Multibyte::Chars (10 times)"
+      x.report("NFD:")  { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :d }  }
+      x.report("NFKD:") { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :kd } }
+      x.report("NFC:")  { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :c  } }
+      x.report("NFKC:") { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :kc } }
     end
   end
   puts
