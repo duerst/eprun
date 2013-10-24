@@ -30,7 +30,7 @@ rescue LoadError
 end
 
 def benchmark_test(test_data)
-  puts "_____________________________ #{test_data.name} ____________________________________"
+  puts "________________ #{test_data.name} (#{test_data.text.length} characters, #{test_data.text.bytes.to_a.length} bytes) ________________"
   Benchmark.bm(6) do |x|
     if String.method_defined? :encode
       puts "Fast Normalization using gsub and hash (100 times)"
