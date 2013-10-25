@@ -41,8 +41,10 @@ Directories and Files
     Adding other files with ending "_.txt" will include them in
     the benchmark.
 *   benchmark/benchmark_results.rb:
-    Results of benchmark for eprun, unicode_utils, and twitter_cldr.
+    Results of benchmark for eprun, unicode_utils,
+    ActiveSupport::Multibyte, and twitter_cldr.
     Eprun and unicode_utils normalizations are run 100 times each,
+    ActiveSupport::Multibyte is run 10 times each, and
     twitter_cldr is run only 1 time (didn't want to wait any longer).
 
 TODOs and Ideas
