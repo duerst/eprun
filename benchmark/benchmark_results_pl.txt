@@ -1,0 +1,66 @@
+================ Unicode-Normalize-1.16, xsub (i.e. C) version ================
+________________ Deutsch (89588 characters, 90898 bytes) ________________
+
+Benchmark: timing 100 iterations of time_NFC, time_NFD, time_NFKC, time_NFKD...
+  time_NFC:  4 wallclock secs ( 4.87 usr +  0.00 sys =  4.87 CPU) @ 20.54/s (n=100)
+  time_NFD:  3 wallclock secs ( 3.03 usr +  0.00 sys =  3.03 CPU) @ 33.05/s (n=100)
+ time_NFKC:  4 wallclock secs ( 4.84 usr +  0.00 sys =  4.84 CPU) @ 20.68/s (n=100)
+ time_NFKD:  4 wallclock secs ( 3.45 usr +  0.00 sys =  3.45 CPU) @ 29.01/s (n=100)
+
+________________ Japanese (77076 characters, 227808 bytes) ________________
+
+Benchmark: timing 100 iterations of time_NFC, time_NFD, time_NFKC, time_NFKD...
+  time_NFC:  6 wallclock secs ( 5.94 usr +  0.00 sys =  5.94 CPU) @ 16.82/s (n=100)
+  time_NFD:  4 wallclock secs ( 4.04 usr +  0.00 sys =  4.04 CPU) @ 24.75/s (n=100)
+ time_NFKC:  5 wallclock secs ( 5.52 usr +  0.00 sys =  5.52 CPU) @ 18.11/s (n=100)
+ time_NFKD:  4 wallclock secs ( 3.87 usr +  0.00 sys =  3.87 CPU) @ 25.85/s (n=100)
+
+________________ Korean (28006 characters, 60180 bytes) ________________
+
+Benchmark: timing 100 iterations of time_NFC, time_NFD, time_NFKC, time_NFKD...
+  time_NFC:  4 wallclock secs ( 3.48 usr +  0.00 sys =  3.48 CPU) @ 28.75/s (n=100)
+  time_NFD:  2 wallclock secs ( 2.04 usr +  0.00 sys =  2.04 CPU) @ 48.95/s (n=100)
+ time_NFKC:  3 wallclock secs ( 3.49 usr +  0.00 sys =  3.49 CPU) @ 28.61/s (n=100)
+ time_NFKD:  3 wallclock secs ( 2.50 usr +  0.00 sys =  2.50 CPU) @ 40.06/s (n=100)
+
+________________ Vietnamese (71453 characters, 86543 bytes) ________________
+
+Benchmark: timing 100 iterations of time_NFC, time_NFD, time_NFKC, time_NFKD...
+  time_NFC:  5 wallclock secs ( 5.10 usr +  0.00 sys =  5.10 CPU) @ 19.60/s (n=100)
+  time_NFD:  4 wallclock secs ( 3.45 usr +  0.00 sys =  3.45 CPU) @ 29.01/s (n=100)
+ time_NFKC:  5 wallclock secs ( 5.12 usr +  0.00 sys =  5.12 CPU) @ 19.54/s (n=100)
+ time_NFKD:  3 wallclock secs ( 3.37 usr +  0.00 sys =  3.37 CPU) @ 29.67/s (n=100)
+
+
+================ Unicode-Normalize-1.16, pure Perl version ================
+________________ Deutsch (89588 characters, 90898 bytes) ________________
+
+Benchmark: timing 10 iterations of time_NFC, time_NFD, time_NFKC, time_NFKD...
+  time_NFC:  8 wallclock secs ( 7.27 usr +  0.00 sys =  7.27 CPU) @  1.38/s (n=10)
+  time_NFD:  2 wallclock secs ( 2.62 usr +  0.00 sys =  2.62 CPU) @  3.82/s (n=10)
+ time_NFKC:  8 wallclock secs ( 7.91 usr +  0.00 sys =  7.91 CPU) @  1.26/s (n=10)
+ time_NFKD:  3 wallclock secs ( 2.95 usr +  0.00 sys =  2.95 CPU) @  3.39/s (n=10)
+
+________________ Japanese (77076 characters, 227808 bytes) ________________
+
+Benchmark: timing 10 iterations of time_NFC, time_NFD, time_NFKC, time_NFKD...
+  time_NFC:  8 wallclock secs ( 7.46 usr +  0.00 sys =  7.46 CPU) @  1.34/s (n=10)
+  time_NFD:  3 wallclock secs ( 2.79 usr +  0.00 sys =  2.79 CPU) @  3.58/s (n=10)
+ time_NFKC:  7 wallclock secs ( 7.52 usr +  0.00 sys =  7.52 CPU) @  1.33/s (n=10)
+ time_NFKD:  3 wallclock secs ( 2.76 usr +  0.00 sys =  2.76 CPU) @  3.62/s (n=10)
+
+________________ Korean (28006 characters, 60180 bytes) ________________
+
+Benchmark: timing 10 iterations of time_NFC, time_NFD, time_NFKC, time_NFKD...
+  time_NFC:  4 wallclock secs ( 4.30 usr +  0.00 sys =  4.30 CPU) @  2.32/s (n=10)
+  time_NFD:  2 wallclock secs ( 1.50 usr +  0.00 sys =  1.50 CPU) @  6.68/s (n=10)
+ time_NFKC:  4 wallclock secs ( 4.38 usr +  0.00 sys =  4.38 CPU) @  2.28/s (n=10)
+ time_NFKD:  2 wallclock secs ( 1.53 usr +  0.00 sys =  1.53 CPU) @  6.54/s (n=10)
+
+________________ Vietnamese (71453 characters, 86543 bytes) ________________
+
+Benchmark: timing 10 iterations of time_NFC, time_NFD, time_NFKC, time_NFKD...
+  time_NFC:  7 wallclock secs ( 7.19 usr +  0.00 sys =  7.19 CPU) @  1.39/s (n=10)
+  time_NFD:  3 wallclock secs ( 2.59 usr +  0.00 sys =  2.59 CPU) @  3.86/s (n=10)
+ time_NFKC:  7 wallclock secs ( 6.85 usr +  0.00 sys =  6.85 CPU) @  1.46/s (n=10)
+ time_NFKD:  2 wallclock secs ( 2.76 usr +  0.00 sys =  2.76 CPU) @  3.62/s (n=10)
