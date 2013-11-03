@@ -46,6 +46,10 @@ Directories and Files
     Eprun and unicode_utils normalizations are run 100 times each,
     ActiveSupport::Multibyte is run 10 times each, and
     twitter_cldr is run only 1 time (didn't want to wait any longer).
+*   benchmark/benchmark.pl: Runs the benchmark using Perl, both with
+    xsub (i.e. C) version (run 100 times) and pure Perl version
+    (run 10 times).
+*   benchmark/benchmark_results_pl.txt: Results of Perl benchmarks.
 
 TODOs and Ideas
 ---------------
