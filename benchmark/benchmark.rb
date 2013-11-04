@@ -61,7 +61,7 @@ def benchmark_test(test_data)
       x.report("NFC:")  { TwitterCldr::Normalization::NFC.normalize(test_data.text) }
       x.report("NFKC:") { TwitterCldr::Normalization::NFKC.normalize(test_data.text) }
     end
-    if self.class.const_defined? :"ActiveSupport"
+    if self.class.const_defined? :ActiveSupport
       puts
       puts "Using ActiveSupport::Multibyte::Chars (10 times)"
       x.report("NFD:")  { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :d }  }
