@@ -29,6 +29,11 @@ begin
 rescue LoadError
 end
 
+begin
+  require 'unicode'
+rescue LoadError
+end
+
 def benchmark_test(test_data)
   puts "________________ #{test_data.name} (#{test_data.text.length} characters, #{test_data.text.bytes.to_a.length} bytes) ________________"
   Benchmark.bm(6) do |x|
@@ -63,6 +68,14 @@ def benchmark_test(test_data)
       x.report("NFKD:") { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :kd } }
       x.report("NFC:")  { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :c  } }
       x.report("NFKC:") { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :kc } }
+    end
+    if self.class.const_defined? :Unicode
+      puts
+      puts "Using unicode gem (native code, 100 times)"
+      x.report("NFD:")  { 100.times { Unicode::normalize_D  test_data.text } }
+      x.report("NFKD:") { 100.times { Unicode::normalize_KD test_data.text } }
+      x.report("NFC:")  { 100.times { Unicode::normalize_C  test_data.text } }
+      x.report("NFKC:") { 100.times { Unicode::normalize_KC test_data.text } }
     end
   end
   puts
