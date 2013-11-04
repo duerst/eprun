@@ -57,4 +57,4 @@ TODOs and Ideas
 *   Deal better with encodings other than UTF-8.
 *   Add methods such as String#nfc, String#nfd,...
 *   Add methods for normalization variants.
-*   See talk for more.
+*   See [talk](http://www.sw.it.aoyama.ac.jp/2013/pub/RubyNorm/) for more.
