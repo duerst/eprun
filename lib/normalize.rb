@@ -124,14 +124,14 @@ module Normalize
     encoding = string.encoding
     if encoding == Encoding::UTF_8
       case form
-      when :nfd then
-        string.gsub REGEXP_D, NF_HASH_D
-      when :nfkd then
-        string.gsub(REGEXP_K, NF_HASH_K).gsub REGEXP_D, NF_HASH_D
       when :nfc then
         string.gsub REGEXP_C, NF_HASH_C
+      when :nfd then
+        string.gsub REGEXP_D, NF_HASH_D
       when :nfkc then
         string.gsub(REGEXP_K, NF_HASH_K).gsub REGEXP_C, NF_HASH_C
+      when :nfkd then
+        string.gsub(REGEXP_K, NF_HASH_K).gsub REGEXP_D, NF_HASH_D
       else
         raise ArgumentError, "Invalid normalization form #{form}."
       end
@@ -143,20 +143,20 @@ module Normalize
   def Normalize.normalize_check(string, form = :nfc)
     string = string.encode Encoding::UTF_8  unless string.encoding==Encoding::UTF_8
     case form
-    when :nfd then
-      string.scan REGEXP_D do |match|
-        return false  if NF_HASH_D[match] != match
-      end
-      true
-    when :nfkd then
-      normalize_check(string, :nfd) and string !~ REGEXP_K
     when :nfc then
       string.scan REGEXP_C do |match|
         return false  if NF_HASH_C[match] != match
       end
       true
+    when :nfd then
+      string.scan REGEXP_D do |match|
+        return false  if NF_HASH_D[match] != match
+      end
+      true
     when :nfkc then
       normalize_check(string, :nfc) and string !~ REGEXP_K
+    when :nfkd then
+      normalize_check(string, :nfd) and string !~ REGEXP_K
     else
       raise ArgumentError, "Invalid normalization form #{form}."
     end
