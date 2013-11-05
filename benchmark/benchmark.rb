@@ -48,7 +48,7 @@ def benchmark_test(test_data)
     if self.class.const_defined? :UnicodeUtils
       puts
       puts "Using unicode_utils gem (100 times)"
-      x.report("NFD:")  { 100.times { UnicodeUtils.nfd  test_data.text } }
+      x.report("NFD:")  { 100.times { UnicodeUtils.canonical_decomposition test_data.text } } # nfd not available
       x.report("NFKD:") { 100.times { UnicodeUtils.nfkd test_data.text } }
       x.report("NFC:")  { 100.times { UnicodeUtils.nfc  test_data.text } }
       x.report("NFKC:") { 100.times { UnicodeUtils.nfkc test_data.text } }
