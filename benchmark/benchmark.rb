@@ -39,32 +39,32 @@ def benchmark_test(test_data)
   Benchmark.bm(6) do |x|
     if String.method_defined? :encode
       puts "Fast normalization using eprun (100 times)"
-      x.report("NFD:")   { 100.times { test_data.text.normalize(:nfd) } }
-      x.report("NFKD:") { 100.times { test_data.text.normalize(:nfkd) } }
-      x.report("NFC:")   { 100.times { test_data.text.normalize(:nfc) } }
-      x.report("NFKC:") { 100.times { test_data.text.normalize(:nfkc) } }
+      x.report("NFD:")  { 100.times { test_data.text.normalize :nfd  } }
+      x.report("NFKD:") { 100.times { test_data.text.normalize :nfkd } }
+      x.report("NFC:")  { 100.times { test_data.text.normalize :nfc  } }
+      x.report("NFKC:") { 100.times { test_data.text.normalize :nfkc } }
       puts "Hash size: NFD #{Normalize::NF_HASH_D.size}, NFC #{Normalize::NF_HASH_C.size}, K #{Normalize::NF_HASH_K.size}"
     end
     if self.class.const_defined? :UnicodeUtils
       puts
       puts "Using unicode_utils gem (100 times)"
-      x.report("NFD:")   { 100.times { UnicodeUtils.canonical_decomposition(test_data.text) } }
-      x.report("NFKD:") { 100.times { UnicodeUtils.nfkd(test_data.text) } }
-      x.report("NFC:")   { 100.times { UnicodeUtils.nfc(test_data.text) } }
-      x.report("NFKC:") { 100.times { UnicodeUtils.nfkc(test_data.text) } }
+      x.report("NFD:")  { 100.times { UnicodeUtils.nfd  test_data.text } }
+      x.report("NFKD:") { 100.times { UnicodeUtils.nfkd test_data.text } }
+      x.report("NFC:")  { 100.times { UnicodeUtils.nfc  test_data.text } }
+      x.report("NFKC:") { 100.times { UnicodeUtils.nfkc test_data.text } }
     end
     if String.method_defined? :localize
       puts
       puts "Using twitter_cldr gem (a single time)"
-      x.report("NFD:")   { TwitterCldr::Normalization::NFD.normalize(test_data.text) }
-      x.report("NFKD:") { TwitterCldr::Normalization::NFKD.normalize(test_data.text) }
-      x.report("NFC:")  { TwitterCldr::Normalization::NFC.normalize(test_data.text) }
-      x.report("NFKC:") { TwitterCldr::Normalization::NFKC.normalize(test_data.text) }
+      x.report("NFD:")  { TwitterCldr::Normalization::NFD.normalize  test_data.text }
+      x.report("NFKD:") { TwitterCldr::Normalization::NFKD.normalize test_data.text }
+      x.report("NFC:")  { TwitterCldr::Normalization::NFC.normalize  test_data.text }
+      x.report("NFKC:") { TwitterCldr::Normalization::NFKC.normalize test_data.text }
     end
     if self.class.const_defined? :ActiveSupport
       puts
       puts "Using ActiveSupport::Multibyte::Chars (10 times)"
-      x.report("NFD:")  { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :d }  }
+      x.report("NFD:")  { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :d  } }
       x.report("NFKD:") { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :kd } }
       x.report("NFC:")  { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :c  } }
       x.report("NFKC:") { 10.times { ActiveSupport::Multibyte::Chars.new(test_data.text).normalize :kc } }
