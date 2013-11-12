@@ -46,6 +46,9 @@ Directories and Files
     Eprun, unicode_utils, and unicode normalizations are run 100 times each,
     ActiveSupport::Multibyte is run 10 times each, and
     twitter_cldr is run only 1 time (didn't want to wait any longer).
+*   benchmark/benchmark_results_jruby.txt:
+    Results of benchmark when using jruby (excludes unicode gem),
+    version 1.7.4 (1.9.3p392, 2013-05-16 2390d3b on Java HotSpot(TM) Client VM 1.7.0_07-b10 [Windows 7-x86]).
 *   benchmark/benchmark.pl: Runs the benchmark using Perl, both with
     xsub (i.e. C) version (run 100 times) and pure Perl version
     (run 10 times).
