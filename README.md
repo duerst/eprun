@@ -43,7 +43,7 @@ Directories and Files
 *   benchmark/benchmark_results.rb:
     Results of benchmark for eprun, unicode_utils,
     ActiveSupport::Multibyte (version 3.0.0), twitter_cldr, and the unicode gem.
-    Eprun and unicode_utils normalizations are run 100 times each,
+    Eprun, unicode_utils, and unicode normalizations are run 100 times each,
     ActiveSupport::Multibyte is run 10 times each, and
     twitter_cldr is run only 1 time (didn't want to wait any longer).
 *   benchmark/benchmark.pl: Runs the benchmark using Perl, both with
