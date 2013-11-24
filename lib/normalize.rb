@@ -140,7 +140,7 @@ module Normalize
     end
   end
   
-  def Normalize.normalize_check(string, form = :nfc)
+  def Normalize.normalized?(string, form = :nfc)
     string = string.encode Encoding::UTF_8  unless string.encoding==Encoding::UTF_8
     case form
     when :nfc then
@@ -154,9 +154,9 @@ module Normalize
       end
       true
     when :nfkc then
-      normalize_check(string, :nfc) and string !~ REGEXP_K
+      normalized?(string, :nfc) and string !~ REGEXP_K
     when :nfkd then
-      normalize_check(string, :nfd) and string !~ REGEXP_K
+      normalized?(string, :nfd) and string !~ REGEXP_K
     else
       raise ArgumentError, "Invalid normalization form #{form}."
     end

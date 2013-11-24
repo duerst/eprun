@@ -88,7 +88,7 @@ class TestNormalize < Test::Unit::TestCase
   def self.generate_test_check_true(source, normalization)
     define_method "test_check_true_#{source}_as_#{normalization}" do
       @@tests.each do |test|
-        actual = test[source].normalize_check(normalization)
+        actual = test[source].normalized?(normalization)
         if @@debug
           assert_equal true, actual,
               "#{to_codepoints(test[source])} should check as #{normalization} but does not on line #{test[:line]}"
@@ -101,7 +101,7 @@ class TestNormalize < Test::Unit::TestCase
 
   def one_false_check_test(test, compare_column, check_column, test_form, line)
     if test[check_column- 1] != test[compare_column- 1]
-      actual = test[check_column- 1].normalize_check(test_form)
+      actual = test[check_column- 1].normalized?(test_form)
       assert_equal false, actual, "failed on line #{line+1} (#{test_form})"
     end
   end
@@ -110,7 +110,7 @@ class TestNormalize < Test::Unit::TestCase
     define_method "test_check_false_#{source}_as_#{normalization}" do
       @@tests.each do |test|
         if test[source] != test[compare]
-          actual = test[source].normalize_check(normalization)
+          actual = test[source].normalized?(normalization)
           if @@debug
             assert_equal false, actual,
                 "#{to_codepoints(test[source])} should not check as #{normalization} but does on line #{test[:line]}"
@@ -146,8 +146,8 @@ class TestNormalize < Test::Unit::TestCase
 
   def test_non_UTF_8
     assert_equal "\u1E0A".encode('UTF-16BE'), "D\u0307".encode('UTF-16BE').normalize(:nfc)
-    assert_equal true, "\u1E0A".encode('UTF-16BE').normalize_check(:nfc)
-    assert_equal false, "D\u0307".encode('UTF-16BE').normalize_check(:nfc)
+    assert_equal true, "\u1E0A".encode('UTF-16BE').normalized?(:nfc)
+    assert_equal false, "D\u0307".encode('UTF-16BE').normalized?(:nfc)
   end
   
   def test_singleton_with_accents

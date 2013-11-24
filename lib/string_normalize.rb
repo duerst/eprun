@@ -15,8 +15,8 @@ class String
     replace(self.normalize(form))
   end
   
-  def normalize_check(form = :nfc)
-    Normalize.normalize_check(self, form)
+  def normalized?(form = :nfc)
+    Normalize.normalized?(self, form)
   end
 end
 
