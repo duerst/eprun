@@ -39,6 +39,9 @@ module Normalize
   NCOUNT = VCOUNT * TCOUNT
   SCOUNT = LCOUNT * NCOUNT
   
+  # Unicode-based encodings (except UTF-8)
+  UNICODE_ENCODINGS = [Encoding::UTF_16BE, Encoding::UTF_16LE, Encoding::UTF_32BE, Encoding::UTF_32LE,
+                       Encoding::GB18030, Encoding::UCS_2BE, Encoding::UCS_4BE]
   
   ## Hangul Algorithm
   def Normalize.hangul_decomp_one(target)
@@ -135,30 +138,38 @@ module Normalize
       else
         raise ArgumentError, "Invalid normalization form #{form}."
       end
-    else
+    elsif  UNICODE_ENCODINGS.include? encoding
       normalize(string.encode(Encoding::UTF_8), form).encode(encoding)
+    else
+      raise Encoding::CompatibilityError, "Unicode Normalization not appropriate for #{encoding}"
     end
   end
   
   def Normalize.normalized?(string, form = :nfc)
-    string = string.encode Encoding::UTF_8  unless string.encoding==Encoding::UTF_8
-    case form
-    when :nfc then
-      string.scan REGEXP_C do |match|
-        return false  if NF_HASH_C[match] != match
+    encoding = string.encoding
+    if encoding == Encoding::UTF_8
+      case form
+      when :nfc then
+        string.scan REGEXP_C do |match|
+          return false  if NF_HASH_C[match] != match
+        end
+        true
+      when :nfd then
+        string.scan REGEXP_D do |match|
+          return false  if NF_HASH_D[match] != match
+        end
+        true
+      when :nfkc then
+        normalized?(string, :nfc) and string !~ REGEXP_K
+      when :nfkd then
+        normalized?(string, :nfd) and string !~ REGEXP_K
+      else
+        raise ArgumentError, "Invalid normalization form #{form}."
       end
-      true
-    when :nfd then
-      string.scan REGEXP_D do |match|
-        return false  if NF_HASH_D[match] != match
-      end
-      true
-    when :nfkc then
-      normalized?(string, :nfc) and string !~ REGEXP_K
-    when :nfkd then
-      normalized?(string, :nfd) and string !~ REGEXP_K
+    elsif  UNICODE_ENCODINGS.include? encoding
+      normalized? string.encode(Encoding::UTF_8), form
     else
-      raise ArgumentError, "Invalid normalization form #{form}."
+      raise Encoding::CompatibilityError, "Unicode Normalization not appropriate for #{encoding}"
     end
   end
   
