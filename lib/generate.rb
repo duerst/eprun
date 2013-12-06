@@ -4,15 +4,18 @@
 # available under the same licence as Ruby itself
 # (see http://www.ruby-lang.org/en/LICENSE.txt)
 
+Dir.chdir(File.dirname(__FILE__))
+
 class Integer
   def to_UTF8()
-    if self>0xFFFF
-      "\\u{#{to_s(16).upcase}}"
-    elsif CombiningClass[self] or self=='\\'.ord or self=='"'.ord
-      "\\u#{to_s(16).upcase.rjust(4, '0')}"
-    else
-      chr Encoding::UTF_8
-    end
+    [self].pack("U*").bytes.to_a.map { |s| "\\" + s.to_s(8) }.join
+    # if self>0xFFFF
+    #   "\\u{#{to_s(16).upcase}}"
+    # elsif CombiningClass[self] or self=='\\'.ord or self=='"'.ord
+    #   "\\u#{to_s(16).upcase.rjust(4, '0')}"
+    # else
+    #   chr Encoding::UTF_8
+    # end
   end
 end
 
@@ -53,9 +56,9 @@ class Hash
 end
 
 # read the file 'CompositionExclusions.txt'
-composition_exclusions = IO.readlines("../data/CompositionExclusions.txt")
-                           .select { |line| line =~ /^[A-Z0-9]{4,5}/ }
-                           .collect { |line| line.split(' ').first.hex }
+composition_exclusions = IO.readlines("../data/CompositionExclusions.txt").
+                           select { |line| line =~ /^[A-Z0-9]{4,5}/ }.
+                           collect { |line| line.split(' ').first.hex }
 
 decomposition_table = {}
 kompatible_table = {}
@@ -139,20 +142,20 @@ module Normalize
     [#{accent_array.to_regexp_chars}]
   "
   REGEXP_D_STRING = "  # composition starters and composition exclusions
-    [#{(composition_table.values+composition_exclusions).to_regexp_chars}]\#{ACCENTS}*
+    [#{(composition_table.values + composition_exclusions).to_regexp_chars}]\#{ACCENTS}*
     |  # characters that can be the result of a composition, except composition starters
-    [#{(composition_starters-composition_table.values).to_regexp_chars}]?\#{ACCENTS}+
+    [#{(composition_starters - composition_table.values).to_regexp_chars}]?\#{ACCENTS}+
     |  # precomposed Hangul syllables
-    [\\u{AC00}-\\u{D7A4}]
+    [\\352\\260\\200-\\355\\236\\244]
   "
   REGEXP_C_STRING = "  # composition exclusions
     [#{composition_exclusions.to_regexp_chars}]\#{ACCENTS}*
     |  # composition starters and characters that can be the result of a composition
     [#{(composition_starters+composition_table.values).to_regexp_chars}]?\#{ACCENTS}+
     |  # Hangul syllables with separate trailer
-    [#{hangul_no_trailing.to_regexp_chars}][\\u11A8-\\u11C2]
+    [#{hangul_no_trailing.to_regexp_chars}][\\341\\206\\250-\\341\\207\\202]
     |  # decomposed Hangul syllables
-    [\\u1100-\\u1112][\\u1161-\\u1175][\\u11A8-\\u11C2]?
+    [\\341\\204\\200-\\341\\204\\222][\\341\\205\\241-\\341\\205\\265][\\341\\206\\250-\\341\\207\\202]?
   "
   REGEXP_K_STRING = "
     [#{kompatible_table.keys.to_regexp_chars}]
