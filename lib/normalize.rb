@@ -18,17 +18,17 @@ module Normalize
 
   NF_HASH_D = Hash.new do |hash, key|
     hash.delete hash.first[0] if hash.length>MAX_HASH_LENGTH # prevent DoS attack
-    hash[key] = Normalize.nfd_one(key)
+    hash[key] = Normalize.nfd_one(key).pack("U*")
   end
 
   NF_HASH_C = Hash.new do |hash, key|
     hash.delete hash.first[0] if hash.length>MAX_HASH_LENGTH # prevent DoS attack
-    hash[key] = Normalize.nfc_one(key)
+    hash[key] = Normalize.nfc_one(key).pack("U*")
   end
 
   NF_HASH_K = Hash.new do |hash, key|
     hash.delete hash.first[0] if hash.length>MAX_HASH_LENGTH # prevent DoS attack
-    hash[key] = Normalize.nfkd_one(key)
+    hash[key] = Normalize.nfkd_one(key).pack("U*")
   end
   
   ## Constants For Hangul
@@ -42,19 +42,29 @@ module Normalize
   NCOUNT = VCOUNT * TCOUNT
   SCOUNT = LCOUNT * NCOUNT
 
+  def Normalize.get_codepoints(source)
+    if source.is_a?(Array)
+      source
+    elsif source.is_a?(String)
+      source.unpack("U*")
+    else
+      raise ArgumentError, "Source must be a string or an array."
+    end
+  end
+
   ## Hangul Algorithm
   def Normalize.hangul_decomp_one(target)
-    cps = target.unpack("U*")
+    cps = get_codepoints(target)
     sIndex = cps.first - SBASE
     return target if sIndex < 0 || sIndex >= SCOUNT
     l = LBASE + sIndex / NCOUNT
     v = VBASE + (sIndex % NCOUNT) / TCOUNT
     t = TBASE + sIndex % TCOUNT
-    (t == TBASE ? [l, v] : [l, v, t]).pack('U*') + cps[1..-1].pack("U*")
+    (t == TBASE ? [l, v] : [l, v, t]) + cps[1..-1]
   end
   
   def Normalize.hangul_comp_one(string)
-    cps = string.unpack("U*")
+    cps = get_codepoints(string)
     length = cps.length
 
     condition = length > 1 &&
@@ -66,9 +76,9 @@ module Normalize
     if condition
       lead_vowel = SBASE + (lead * VCOUNT + vowel) * TCOUNT
       if length > 2 && 0 <= (trail = cps[2] - TBASE) && trail < TCOUNT
-        [lead_vowel + trail].pack("U*") + cps[3..-1].pack("U*")
+        [lead_vowel + trail] + cps[3..-1]
       else
-        [lead_vowel].pack("U*") + cps[2..-1].pack("U*")
+        [lead_vowel] + cps[2..-1]
       end
     else
       string
@@ -77,10 +87,9 @@ module Normalize
   
   ## Canonical Ordering
   def Normalize.canonical_ordering_one(string)
-    cps = string.unpack("U*")
+    cps = get_codepoints(string)
     sorting = cps.collect do |c|
-      char = [c].pack("U*")
-      [char, CLASS_TABLE[char]]
+      [c, CLASS_TABLE[[c].pack("U*")]]
     end
     (sorting.length - 2).downto(0) do |i| # bubble sort
       (0..i).each do |j|
@@ -90,12 +99,12 @@ module Normalize
         end
       end
     end
-    sorting.collect(&:first).join
+    sorting.collect(&:first)
   end
   
   ## Normalization Forms for Patterns (not whole Strings)
   def Normalize.nfd_one(string)
-    cps = string.unpack("U*")
+    cps = get_codepoints(string)
     cps = cps.inject([]) do |ret, cp|
       if decomposition = DECOMPOSITION_TABLE[[cp].pack("U*")]
         ret += decomposition.unpack("U*")
@@ -104,41 +113,40 @@ module Normalize
       end
     end
 
-    canonical_ordering_one(hangul_decomp_one(cps.pack("U*")))
+    canonical_ordering_one(hangul_decomp_one(cps))
   end
 
   def Normalize.nfkd_one(string)
-    cps = string.unpack("U*")
+    cps = get_codepoints(string)
     final_cps = []
     position = 0
     while position < cps.length
       if decomposition = KOMPATIBLE_TABLE[[cps[position]].pack("U*")]
-        final_cps += nfkd_one(decomposition).unpack("U*")
+        final_cps += nfkd_one(decomposition)
       else
         final_cps << cps[position]
       end
       position += 1
     end
-    final_cps.pack("U*")
+    final_cps
   end
-  
+
   def Normalize.nfc_one (string)
-    nfd_string = nfd_one(string)
-    nfd_string_cp = nfd_string.unpack("U*")
-    start = [nfd_string_cp[0]].pack("U*")
+    nfd_cps = nfd_one(string)
+    start = [nfd_cps[0]].pack("U*")
     last_class = CLASS_TABLE[start] - 1
-    accents = ''
-    nfd_string_cp[1..-1].each do |accent_cp|
+    accents = []
+    nfd_cps[1..-1].each do |accent_cp|
       accent = [accent_cp].pack("U*")
       accent_class = CLASS_TABLE[accent]
       if last_class < accent_class && composite = COMPOSITION_TABLE[start + accent]
         start = composite
       else
-        accents += accent
+        accents << accent_cp
         last_class = accent_class
       end
     end
-    hangul_comp_one(start + accents)
+    hangul_comp_one(start.unpack("U*") + accents)
   end
 
   def Normalize.normalize(string, form = :nfc)
