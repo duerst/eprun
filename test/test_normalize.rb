@@ -6,8 +6,6 @@ $KCODE = "UTF-8"
 # available under the same licence as Ruby itself
 # (see http://www.ruby-lang.org/en/LICENSE.txt)
 
-Dir.chdir(File.dirname(__FILE__))
-
 # Encoding.default_external = 'utf-8'
 # Encoding.default_internal = 'utf-8'
 require '../lib/string_normalize'
