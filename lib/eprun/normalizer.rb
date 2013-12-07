@@ -65,8 +65,6 @@ module Eprun
         v = VBASE + (sIndex % NCOUNT) / TCOUNT
         t = TBASE + sIndex % TCOUNT
         (t == TBASE ? [l, v] : [l, v, t]) + cps[1..-1]
-      rescue => e
-        binding.pry
       end
   
       def hangul_comp_one(string)

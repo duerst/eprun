@@ -160,7 +160,7 @@ module Eprun
       )
 
       attrs = {
-        :accent_array => arr_to_regexp_chars(accent_array),
+        :accents => arr_to_regexp_chars(accent_array),
         :composition_starters_and_exclusions => arr_to_regexp_chars(composition_table.values + composition_exclusions),
         :composition_result_characters => arr_to_regexp_chars(composition_starters - composition_table.values),
         :composition_exclusions => arr_to_regexp_chars(composition_exclusions),
