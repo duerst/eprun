@@ -26,3 +26,11 @@ task :generate_tables do
     ROOT_DIR.join("lib/eprun").to_s
   ).generate
 end
+
+task :benchmark do
+  require 'eprun'
+  require ROOT_DIR.join("benchmark/benchmark").to_s
+
+  Eprun.enable_core_extensions!
+  Eprun::Benchmarks.new(ROOT_DIR.join("benchmark".to_s)).run
+end

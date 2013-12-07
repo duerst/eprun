@@ -12,6 +12,8 @@ RSpec.configure do |config|
   config.mock_with :rr
 end
 
+Eprun.enable_core_extensions!
+
 unless self.class.const_defined?(:Enumerator)
   module Enumerable
     def with_index

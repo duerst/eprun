@@ -32,7 +32,19 @@ module Eprun
         hash.delete hash.first[0] if hash.length > MAX_HASH_LENGTH # prevent DoS attack
         hash[key] = Normalizer.nfkd_one(key).pack("U*")
       end
-  
+
+      def nf_hash_d
+        NF_HASH_D
+      end
+
+      def nf_hash_c
+        NF_HASH_C
+      end
+
+      def nf_hash_k
+        NF_HASH_K
+      end
+
       ## Constants For Hangul
       SBASE = 0xAC00
       LBASE = 0x1100
