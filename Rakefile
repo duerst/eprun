@@ -10,6 +10,16 @@ $:.push(ROOT_DIR.to_s)
 require 'tasks/erb_template'
 require 'tasks/tables_generator'
 
+require 'rspec/core/rake_task'
+require 'rubygems/package_task'
+
+task :default => :spec
+Bundler::GemHelper.install_tasks
+
+RSpec::Core::RakeTask.new do |t|
+  t.pattern = './spec/**/*_spec.rb'
+end
+
 task :generate_tables do
   Eprun::TablesGenerator.new(
     ROOT_DIR.join("data").to_s,

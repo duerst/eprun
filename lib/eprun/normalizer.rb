@@ -4,8 +4,6 @@
 # available under the same licence as Ruby itself
 # (see http://www.ruby-lang.org/en/LICENSE.txt)
 
-require 'pry-nav'
-
 module Eprun
   class Normalizer
     class << self

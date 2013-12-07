@@ -13,4 +13,9 @@ $KCODE = 'utf-8' unless RUBY_VERSION >= '1.9.0'
 
 require 'eprun/tables'
 require 'eprun/normalizer'
-require 'eprun/core_ext/string'
+
+module Eprun
+  def self.enable_core_extensions!
+    require 'eprun/core_ext/string' unless "".respond_to?(:normalize)
+  end
+end
