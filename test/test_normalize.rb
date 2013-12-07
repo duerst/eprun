@@ -2,17 +2,20 @@
 
 $KCODE = "UTF-8"
 
+Dir.chdir(File.dirname(__FILE__))
+
 # Copyright 2010-2013 Ayumu Nojima (野島 歩) and Martin J. Dürst (duerst@it.aoyama.ac.jp)
 # available under the same licence as Ruby itself
 # (see http://www.ruby-lang.org/en/LICENSE.txt)
 
 # Encoding.default_external = 'utf-8'
 # Encoding.default_internal = 'utf-8'
-require '../lib/string_normalize'
+require '../lib/eprun/tables'
+require '../lib/eprun/normalizer'
+require '../lib/eprun/core_ext/string'
 require 'test/unit'
 
 require 'rubygems'
-require 'pry-nav'
 
 $stop = false
 

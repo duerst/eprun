@@ -6,7 +6,7 @@
 
 class String
   def normalize(form = :nfc)
-    Normalize.normalize(self, form)
+    Eprun::Normalizer.normalize(self, form)
   end
   
   def normalize!(form = :nfc)
@@ -14,7 +14,7 @@ class String
   end
   
   def normalized?(form = :nfc)
-    Normalize.normalized?(self, form)
+    Eprun::Normalizer.normalized?(self, form)
   end
 end
 
