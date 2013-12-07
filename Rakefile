@@ -9,8 +9,6 @@ $:.push(ROOT_DIR.to_s)
 
 require 'tasks/erb_template'
 require 'tasks/tables_generator'
-require 'pathname'
-require 'rake'
 
 task :generate_tables do
   Eprun::TablesGenerator.new(

@@ -13,16 +13,16 @@ module Eprun
       |  # characters that can be the result of a composition, except composition starters
       [<%= composition_result_characters %>]?\[<%= accents %>]+
       |  # precomposed Hangul syllables
-      [\\352\\260\\200-\\355\\236\\244]
+      [\352\260\200-\355\236\244]
     "
     REGEXP_C_STRING = "  # composition exclusions
       [<%= composition_exclusions %>]\[<%= accents %>]*
       |  # composition starters and characters that can be the result of a composition
       [<%= composition_starters_plus_result_characters %>]?\[<%= accents %>]+
       |  # Hangul syllables with separate trailer
-      [<%= hangul_separate_trailer %>][\\341\\206\\250-\\341\\207\\202]
+      [<%= hangul_separate_trailer %>][\341\206\250-\341\207\202]
       |  # decomposed Hangul syllables
-      [\\341\\204\\200-\\341\\204\\222][\\341\\205\\241-\\341\\205\\265][\\341\\206\\250-\\341\\207\\202]?
+      [\341\204\200-\341\204\222][\341\205\241-\341\205\265][\341\206\250-\341\207\202]?
     "
     REGEXP_K_STRING = "
       [<%= kompatible_chars %>]
