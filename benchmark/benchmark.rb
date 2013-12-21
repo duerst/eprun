@@ -29,7 +29,12 @@ begin
 rescue LoadError
 end
 
-module Eprun
+begin
+  require 'unf'
+rescue LoadError
+end
+
+module EprunTasks
   class Benchmarks
 
     Language = Struct.new(:name, :test_data)
@@ -62,6 +67,16 @@ module Eprun
         x.report("NFKC:") { 100.times { language.test_data.normalize :nfkc } }
         puts "Hash size: NFD #{Normalizer.nf_hash_d.size}, NFC #{Normalizer.nf_hash_c.size}, K #{Normalizer.nf_hash_k.size}"
 
+        # if self.class.const_defined?(:UNF)
+          puts
+          puts "Using unf gem (100 times)"
+          normalizer = UNF::Normalizer.instance
+          x.report("NFD:")  { 100.times { normalizer.normalize(language.test_data, :nfd) } }
+          x.report("NFKD:") { 100.times { normalizer.normalize(language.test_data, :nfkd) } }
+          x.report("NFC:")  { 100.times { normalizer.normalize(language.test_data, :nfc) } }
+          x.report("NFKC:") { 100.times { normalizer.normalize(language.test_data, :nfkc) } }
+        # end
+
         if self.class.const_defined?(:UnicodeUtils)
           puts
           puts "Using unicode_utils gem (100 times)"
@@ -82,11 +97,11 @@ module Eprun
 
         if self.class.const_defined?(:ActiveSupport)
           puts
-          puts "Using ActiveSupport::Multibyte::Chars (10 times)"
-          x.report("NFD:")  { 10.times { ActiveSupport::Multibyte::Chars.new(language.test_data).normalize :d  } }
-          x.report("NFKD:") { 10.times { ActiveSupport::Multibyte::Chars.new(language.test_data).normalize :kd } }
-          x.report("NFC:")  { 10.times { ActiveSupport::Multibyte::Chars.new(language.test_data).normalize :c  } }
-          x.report("NFKC:") { 10.times { ActiveSupport::Multibyte::Chars.new(language.test_data).normalize :kc } }
+          puts "Using ActiveSupport::Multibyte::Chars (100 times)"
+          x.report("NFD:")  { 100.times { ActiveSupport::Multibyte::Chars.new(language.test_data).normalize :d  } }
+          x.report("NFKD:") { 100.times { ActiveSupport::Multibyte::Chars.new(language.test_data).normalize :kd } }
+          x.report("NFC:")  { 100.times { ActiveSupport::Multibyte::Chars.new(language.test_data).normalize :c  } }
+          x.report("NFKC:") { 100.times { ActiveSupport::Multibyte::Chars.new(language.test_data).normalize :kc } }
         end
 
         if self.class.const_defined?(:Unicode)

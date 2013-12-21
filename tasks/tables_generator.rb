@@ -4,7 +4,7 @@
 # available under the same licence as Ruby itself
 # (see http://www.ruby-lang.org/en/LICENSE.txt)
 
-module Eprun
+module EprunTasks
   class TablesGenerator
 
     attr_reader :data_dir, :output_dir

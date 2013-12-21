@@ -4,18 +4,27 @@
 # available under the same licence as Ruby itself
 # (see http://www.ruby-lang.org/en/LICENSE.txt)
 
-if self.class.const_defined?(:Encoding)
-  Encoding.default_external = 'utf-8'
-  Encoding.default_internal = 'utf-8'
-end
+class Eprun
+  class << self
 
-$KCODE = 'utf-8' unless RUBY_VERSION >= '1.9.0'
+    def enable_core_extensions!
+      require 'eprun/core_ext/string' unless "".respond_to?(:normalize)
+    end
 
-require 'eprun/tables'
-require 'eprun/normalizer'
+    def ruby18?
+      RUBY_VERSION >= "1.8.0" && RUBY_VERSION < "1.9.0"
+    end
 
-module Eprun
-  def self.enable_core_extensions!
-    require 'eprun/core_ext/string' unless "".respond_to?(:normalize)
+    def require_path
+      ruby18? ? "eprun/ruby18" : "eprun"
+    end
+
+    def require_file(file)
+      require File.join(require_path, file)
+    end
+
   end
 end
+
+Eprun.require_file("tables")
+Eprun.require_file("normalize")

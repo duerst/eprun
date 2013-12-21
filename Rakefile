@@ -10,18 +10,21 @@ $:.push(ROOT_DIR.to_s)
 require 'tasks/erb_template'
 require 'tasks/tables_generator'
 
-require 'rspec/core/rake_task'
+require 'test/unit'
 require 'rubygems/package_task'
 
-task :default => :spec
+task :default => :test
 Bundler::GemHelper.install_tasks
 
-RSpec::Core::RakeTask.new do |t|
-  t.pattern = './spec/**/*_spec.rb'
+task :test do
+  files = Dir.glob("./test/test_*.rb")
+  runner = Test::Unit::AutoRunner.new(true)
+  runner.process_args(files)
+  runner.run
 end
 
 task :generate_tables do
-  Eprun::TablesGenerator.new(
+  EprunTasks::TablesGenerator.new(
     ROOT_DIR.join("data").to_s,
     ROOT_DIR.join("lib/eprun").to_s
   ).generate
@@ -32,5 +35,5 @@ task :benchmark do
   require ROOT_DIR.join("benchmark/benchmark").to_s
 
   Eprun.enable_core_extensions!
-  Eprun::Benchmarks.new(ROOT_DIR.join("benchmark".to_s)).run
+  EprunTasks::Benchmarks.new(ROOT_DIR.join("benchmark".to_s)).run
 end
