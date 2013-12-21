@@ -20,10 +20,14 @@ module EprunTasks
       :combining_classes
     )
 
-    def hash_to_s(hash)
+    def hash_to_s(hash, unicode_data)
       line_slice(
         hash.collect do |key, value|
-          "#{key.inspect}=>#{value.inspect}, "
+          if Eprun.ruby18?
+            "#{key.inspect}=>#{value.inspect}, "
+          else
+            "\"#{to_utf8(key, unicode_data.combining_classes)}\"=>\"#{to_utf8(value, unicode_data.combining_classes)}\", "
+          end
         end,
         "\n    "
       )
@@ -34,13 +38,25 @@ module EprunTasks
       arr.each_slice(16).collect(&:join).join(join_char)
     end
 
-    def to_utf8(obj)
+    def to_utf8(obj, combining_classes)
       arr = obj.is_a?(Array) ? obj : [obj]
-      arr.pack("U*").bytes.to_a.map { |s| "\\" + s.to_s(8) }.join
+      if Eprun.ruby18?
+        arr.pack("U*").bytes.to_a.map { |s| "\\" + s.to_s(8) }.join
+      else
+        arr.map do |item|
+          if item > 0xFFFF
+            "\\u{#{item.to_s(16).upcase}}"
+          elsif combining_classes[item] || item == '\\'.ord || item == '"'.ord
+            "\\u#{item.to_s(16).upcase.rjust(4, '0')}"
+          else
+            item.chr(Encoding::UTF_8)
+          end
+        end.join
+      end
     end
 
     # converts an array of Integers to character ranges
-    def arr_to_regexp_chars(arr)
+    def arr_to_regexp_chars(arr, unicode_data)
       line_slice(
         arr.sort.inject([]) do |ranges, value|
           if ranges.last and ranges.last[1] + 1 >= value
@@ -52,11 +68,11 @@ module EprunTasks
         end.collect do |first, last|
           case last - first
             when 0
-              to_utf8(first)
+              to_utf8(first, unicode_data.combining_classes)
             when 1
-              to_utf8(first) + to_utf8(last)
+              to_utf8(first, unicode_data.combining_classes) + to_utf8(last, unicode_data.combining_classes)
             else
-              to_utf8(first) + '-' + to_utf8(last)
+              to_utf8(first, unicode_data.combining_classes) + '-' + to_utf8(last, unicode_data.combining_classes)
           end
         end,
         "\" +\n    \""
@@ -154,23 +170,27 @@ module EprunTasks
 
       class_table_str = line_slice(
         unicode_data.combining_classes.collect do |key, value|
-          "#{key.inspect}=>#{value.inspect}, "
+          if Eprun.ruby18?
+            "#{key.inspect}=>#{value.inspect}, "
+          else
+            "\"#{to_utf8(key, unicode_data.combining_classes)}\"=>#{value}, "
+          end
         end,
         "\n    "
       )
 
       attrs = {
-        :accents => arr_to_regexp_chars(accent_array),
-        :composition_starters_and_exclusions => arr_to_regexp_chars(composition_table.values + composition_exclusions),
-        :composition_result_characters => arr_to_regexp_chars(composition_starters - composition_table.values),
-        :composition_exclusions => arr_to_regexp_chars(composition_exclusions),
-        :composition_starters_plus_result_characters => arr_to_regexp_chars(composition_starters + composition_table.values),
-        :hangul_separate_trailer => arr_to_regexp_chars(hangul_no_trailing),
-        :kompatible_chars => arr_to_regexp_chars(unicode_data.kompatible_table.keys),
+        :accents => arr_to_regexp_chars(accent_array, unicode_data),
+        :composition_starters_and_exclusions => arr_to_regexp_chars(composition_table.values + composition_exclusions, unicode_data),
+        :composition_result_characters => arr_to_regexp_chars(composition_starters - composition_table.values, unicode_data),
+        :composition_exclusions => arr_to_regexp_chars(composition_exclusions, unicode_data),
+        :composition_starters_plus_result_characters => arr_to_regexp_chars(composition_starters + composition_table.values, unicode_data),
+        :hangul_separate_trailer => arr_to_regexp_chars(hangul_no_trailing, unicode_data),
+        :kompatible_chars => arr_to_regexp_chars(unicode_data.kompatible_table.keys, unicode_data),
         :class_table_str => class_table_str,
-        :decomposition_table => hash_to_s(unicode_data.decomposition_table),
-        :kompatible_table => hash_to_s(unicode_data.kompatible_table),
-        :composition_table => hash_to_s(composition_table)
+        :decomposition_table => hash_to_s(unicode_data.decomposition_table, unicode_data),
+        :kompatible_table => hash_to_s(unicode_data.kompatible_table, unicode_data),
+        :composition_table => hash_to_s(composition_table, unicode_data)
       }
       
       write_template(attrs)

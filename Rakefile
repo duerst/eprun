@@ -7,16 +7,17 @@
 ROOT_DIR = Pathname.new(File.join(File.dirname(__FILE__)))
 $:.push(ROOT_DIR.to_s)
 
+require 'eprun/helpers'
 require 'tasks/erb_template'
 require 'tasks/tables_generator'
 
-require 'test/unit'
 require 'rubygems/package_task'
 
 task :default => :test
 Bundler::GemHelper.install_tasks
 
 task :test do
+  require 'test/unit'
   files = Dir.glob("./test/test_*.rb")
   runner = Test::Unit::AutoRunner.new(true)
   runner.process_args(files)
@@ -26,7 +27,7 @@ end
 task :generate_tables do
   EprunTasks::TablesGenerator.new(
     ROOT_DIR.join("data").to_s,
-    ROOT_DIR.join("lib/eprun").to_s
+    ROOT_DIR.join("lib", Eprun.require_path).to_s
   ).generate
 end
 

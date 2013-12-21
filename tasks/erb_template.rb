@@ -14,11 +14,15 @@ class ErbTemplate
       attrs.each_pair do |attr, val|
         define_method(attr) { val }
       end
+
+      def render(template)
+        ERB.new(template).result(binding)
+      end
     end.new
   end
 
   def render
-    ERB.new(@template).result(@context.send(:binding))
+    @context.render(@template)
   end
 
 end

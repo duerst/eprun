@@ -4,6 +4,9 @@
 # available under the same licence as Ruby itself
 # (see http://www.ruby-lang.org/en/LICENSE.txt)
 
+$KCODE = 'utf-8' unless RUBY_VERSION >= '1.9.0'
+
+require 'eprun'
 require 'benchmark'
 
 begin
@@ -65,7 +68,7 @@ module EprunTasks
         x.report("NFKD:") { 100.times { language.test_data.normalize :nfkd } }
         x.report("NFC:")  { 100.times { language.test_data.normalize :nfc  } }
         x.report("NFKC:") { 100.times { language.test_data.normalize :nfkc } }
-        puts "Hash size: NFD #{Normalizer.nf_hash_d.size}, NFC #{Normalizer.nf_hash_c.size}, K #{Normalizer.nf_hash_k.size}"
+        puts "Hash size: NFD #{Eprun.nf_hash_d.size}, NFC #{Eprun.nf_hash_c.size}, K #{Eprun.nf_hash_k.size}"
 
         # if self.class.const_defined?(:UNF)
           puts
